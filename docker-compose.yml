@@ -1,0 +1,13 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/:/data/db
+
+  scraper:
+    build: .
+    volumes:
+      - ./scraper/target/scala-2.12/neverrideontimescraper_2.12-0.1.jar:/code/app.jar
