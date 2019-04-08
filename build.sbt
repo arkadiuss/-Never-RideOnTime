@@ -6,8 +6,12 @@ lazy val common = Seq(
 lazy val scraper = project.in(file("scraper"))
     .settings(
       common,
-      name := "NeverRideOnTimeScraper"
-    )
+      name := "NeverRideOnTimeScraper",
+      libraryDependencies ++= Seq(
+        "com.typesafe" % "config" % "1.2.0",
+        "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
+      )
+)
 
 lazy val analyzer = project.in(file("analyzer"))
   .settings(
