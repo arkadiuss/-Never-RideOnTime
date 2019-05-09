@@ -1,16 +1,9 @@
-import models.Stop
-import persistance.Database
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
+import akka.actor.ActorSystem
+import scheduling.SchedulingActor
 
 object Main extends App {
-  val stops = Database.stopRepository()
-  stops.insert(new Stop("Miasteczko"))
-  stops.insert(new Stop("Miasteczko2"))
+  val system = ActorSystem("scraperSystem")
+  val scheduler = system.actorOf(SchedulingActor.props, "scheduler")
 
-  val getted = Await.result(stops.findAll(), Duration.Inf)
-  for(s <- getted){
-    print(s.name)
-  }
+  scheduler ! "start"
 }
