@@ -1,6 +1,6 @@
 import akka.actor.ActorSystem
 import scheduling.SchedulingActor
-import api.{ApiClient, StopRequest, StopsRequest}
+import api.{ApiClient, StopsRequest}
 
 object Main extends App {
   val system = ActorSystem("scraperSystem")
