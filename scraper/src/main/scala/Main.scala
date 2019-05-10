@@ -1,14 +1,12 @@
 import akka.actor.ActorSystem
-import scheduling.SchedulingActor
-import api.{ApiClient, StopsRequest}
+import api.StopsRequest
+import scheduling.{RecurringTask, Scheduler, Task}
+
+import scala.concurrent.duration._
 
 object Main extends App {
   val system = ActorSystem("scraperSystem")
-  val scheduler = system.actorOf(SchedulingActor.props, "scheduler")
-
-  val apiClient = system.actorOf(ApiClient.props, name="api_client")
-
-  scheduler ! "start"
-
-  apiClient ! new StopsRequest
+  val scheduler = system.actorOf(Scheduler.props, "scheduler")
+  scheduler ! RecurringTask("stops", new StopsRequest, 10 seconds)
+  scheduler ! Task(new StopsRequest)
 }

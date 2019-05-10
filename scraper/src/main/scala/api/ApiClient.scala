@@ -33,4 +33,3 @@ class ApiClient extends Actor {
     case r: Request[_] => get(r)
   }
 }
-
