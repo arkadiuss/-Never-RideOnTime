@@ -1,8 +1,8 @@
 package api
 
 import akka.actor.{Actor, Props}
-import api.responses.StopResponse
-import persistance.{DatabaseWriter, SaveStopsRequest}
+import api.responses.{StopResponse, VehiclesResponse}
+import persistance.{DatabaseWriter, SaveStopsRequest, SaveVehiclesRequest}
 
 object ApiResponseHandler {
   def props: Props = Props(new ApiResponseHandler)
@@ -13,6 +13,7 @@ class ApiResponseHandler extends Actor {
 
   override def receive: Receive = {
     case res: StopResponse => databaseWriter ! SaveStopsRequest(res.stops)
+    case res: VehiclesResponse => databaseWriter ! SaveVehiclesRequest(res.vehicles)
     case res: Any => println("Unknown response" + res)
   }
 }

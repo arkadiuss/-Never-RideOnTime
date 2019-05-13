@@ -3,7 +3,7 @@ package persistance
 import org.mongodb.scala.{MongoClient, MongoDatabase}
 import com.typesafe.config.{Config, ConfigFactory}
 import models.Stop
-import persistance.repository.StopRepository
+import persistance.repository.{StopRepository, VehiclesRepository}
 import org.mongodb.scala.bson.codecs.Macros._
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
@@ -17,4 +17,5 @@ object Database {
 
   def db(): MongoDatabase = database
   def stopRepository() = new StopRepository
+  def vehiclesRepository() = new VehiclesRepository
 }

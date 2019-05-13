@@ -4,7 +4,6 @@ import akka.actor.{Actor, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.ActorMaterializer
-import api.responses.StopResponse
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
