@@ -3,6 +3,7 @@ package api
 import akka.http.scaladsl.model.ResponseEntity
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.Materializer
+import api.responses.StopResponse
 
 import scala.concurrent.Future
 
