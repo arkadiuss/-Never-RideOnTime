@@ -27,6 +27,7 @@ class ApiClient extends Actor {
   }
 
   def get[T](r: Request[T]): Unit = {
+    logger.info(s"Request: $r")
     val responseFuture: Future[HttpResponse] = http.singleRequest(HttpRequest(uri = baseUrl + r.url))
     responseFuture.flatMap(res => r.map(res.entity)).onComplete {
       case Success(res) => apiResponseHandler ! res

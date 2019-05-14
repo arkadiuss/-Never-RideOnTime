@@ -18,7 +18,7 @@ class DatabaseWriter extends Actor {
   override def receive: Receive = {
     case req: SaveStopsRequest => saveStops(req.stops)
     case req: SaveVehiclesRequest => saveVehicles(req.vehicles)
-    case res: SavePassagesRequest => savePassages(res.passages)
+    case res: SavePassagesRequest => savePassages(res.stopId, res.passages)
   }
 
   private def saveStops(stops: Seq[Stop]): Unit = {
@@ -31,8 +31,8 @@ class DatabaseWriter extends Actor {
     vehiclesRepository.insertMany(vehicles)
   }
 
-  private def savePassages(passages: Seq[Passage]): Unit = {
-    logger.info("Inserting passages to database ")
+  private def savePassages(stopId: String, passages: Seq[Passage]): Unit = {
+    logger.info(s"Inserting passages to database $stopId")
     passagesRepository.insertMany(passages)
   }
 }
@@ -44,4 +44,4 @@ case class SaveStopsRequest(stops: Seq[Stop])
 
 case class SaveVehiclesRequest(vehicles: Seq[Vehicle])
 
-case class SavePassagesRequest(passages: Seq[Passage])
+case class SavePassagesRequest(stopId: String, passages: Seq[Passage])

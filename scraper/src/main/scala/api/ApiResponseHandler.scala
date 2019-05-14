@@ -33,7 +33,8 @@ class ApiResponseHandler extends Actor {
     })
       .filterNot(it => it.status == "PLANNED")
       .filter(it => Math.abs(it.actualRelativeTime) < 300)
-    databaseWriter ! SavePassagesRequest(passages)
+    logger.info(s"Filtered passages from ${apiPassages.size} to ${passages.size} entries")
+    databaseWriter ! SavePassagesRequest(stopInfo.stopShortName, passages)
   }
 
   override def receive: Receive = {
