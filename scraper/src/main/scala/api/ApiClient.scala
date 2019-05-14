@@ -17,16 +17,14 @@ class ApiClient extends Actor {
   final val http = Http(context.system)
   final implicit val materializer = ActorMaterializer()
   final implicit val executionContext = context.system.dispatcher
+  private val apiResponseHandler = context.actorOf(ApiResponseHandler.props, "apiResponseHandler")
 
   def get[T](r: Request[T]): Unit = {
     val responseFuture: Future[HttpResponse] = http.singleRequest(HttpRequest(uri = baseUrl + r.url))
     responseFuture.flatMap(res => r.map(res.entity)).onComplete {
-      case Success(res) => println(res)
+      case Success(res) => apiResponseHandler ! res
       case Failure(exception) => println(exception)
     }
-  }
-
-  def parseResponse(res: HttpResponse): Unit = {
   }
 
   override def receive: Receive = {

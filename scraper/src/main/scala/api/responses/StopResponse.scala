@@ -1,4 +1,4 @@
-package api
+package api.responses
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import models.Stop
