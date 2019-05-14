@@ -2,6 +2,7 @@ package scheduling
 
 import akka.actor.{Actor, Cancellable, Props}
 import api.{ApiClient, Request}
+import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -13,6 +14,8 @@ object Scheduler {
 class Scheduler extends Actor {
   private val apiClient = context.actorOf(ApiClient.props, "apiClient")
   implicit val ec = ExecutionContext.global
+
+  private val logger = Logger[Scheduler]
 
   private val tasks: Map[String, Cancellable] = Map()
 
@@ -36,13 +39,13 @@ class Scheduler extends Actor {
   private def onMessage(tasks: Map[String, Cancellable]): Receive = {
     case task: RecurringTask =>
       addTask(task)
-      println(s"\n === Recurring Task registered: $task === \n")
+      logger.info(s"recurring Task registered: $task")
     case task: Task =>
       apiClient ! task.request
-      println(s"\n === One time task requested: $task === \n")
+      logger.info(s"\none time task requested: $task")
     case task: StopTask =>
       removeTask(task)
-      println(s"\n === Recurring Task unregistered: $task === \n")
+      logger.info(s"\nrecurring Task unregistered: $task")
   }
 }
 
