@@ -2,6 +2,7 @@ package api
 
 import akka.actor.{Actor, Props}
 import api.responses.{StopInfoResponse, StopResponse, VehiclesResponse}
+import models.Passage
 import persistance.{DatabaseWriter, SavePassagesRequest, SaveStopsRequest, SaveVehiclesRequest}
 
 object ApiResponseHandler {
@@ -12,9 +13,24 @@ class ApiResponseHandler extends Actor {
   private val databaseWriter = context.actorOf(DatabaseWriter.props, "databaseWriter")
 
   private def handleStopInfoResponse(stopInfo: StopInfoResponse): Unit = {
-    def departures = stopInfo.actual ++ stopInfo.old
-    //TODO: filtering and mapping passages
-    databaseWriter ! SavePassagesRequest(departures)
+    val apiPassages = stopInfo.actual ++ stopInfo.old
+    val passages = apiPassages.map( it => {
+      Passage(
+        it.actualRelativeTime,
+        it.actualTime,
+        it.plannedTime,
+        it.status,
+        it.patternText,
+        it.routeId,
+        it.tripId,
+        it.passageid,
+        stopInfo.stopShortName,
+        System.currentTimeMillis()
+      )
+    })
+      .filterNot(it => it.status == "PLANNED")
+      .filter(it => Math.abs(it.actualRelativeTime) < 300)
+    databaseWriter ! SavePassagesRequest(passages)
   }
 
   override def receive: Receive = {

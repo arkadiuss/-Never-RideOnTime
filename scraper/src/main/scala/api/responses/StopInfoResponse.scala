@@ -5,10 +5,11 @@ import models.Passage
 import spray.json.DefaultJsonProtocol
 
 final case class StopInfoResponse(
-                                 actual: List[Passage],
-                                 old: List[Passage]
+                                   actual: List[ApiPassage],
+                                   old: List[ApiPassage],
+                                   stopShortName: String
                                  )
 
 case object StopInfoResponse extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val stopInfoResponseFormat = jsonFormat2(StopInfoResponse.apply)
+  implicit val stopInfoResponseFormat = jsonFormat3(StopInfoResponse.apply)
 }

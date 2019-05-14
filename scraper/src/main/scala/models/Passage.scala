@@ -1,8 +1,5 @@
 package models
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import spray.json.DefaultJsonProtocol
-
 case class Passage(
                     actualRelativeTime: Long,
                     actualTime: Option[String],
@@ -11,10 +8,8 @@ case class Passage(
                     patternText: String,
                     routeId: String,
                     tripId: String,
-                    passageid: String
+                    passageid: String,
+                    stopShortName: String,
+                    scrapedTimestamp: Long 
                     )
 
-
-case object Passage extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val stopFormat = jsonFormat8(Passage.apply)
-}
