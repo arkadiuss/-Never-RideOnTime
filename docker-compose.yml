@@ -9,5 +9,6 @@ services:
 
   scraper:
     build: .
+    restart: always
     volumes:
       - ./scraper/target/scala-2.12/neverrideontimescraper_2.12-0.1.jar:/code/app.jar
