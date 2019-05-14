@@ -7,6 +7,7 @@ lazy val scraper = project.in(file("scraper"))
   .settings(
     common,
     name := "NeverRideOnTimeScraper",
+    retrieveManaged := true,
     resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.2.0",
@@ -18,6 +19,9 @@ lazy val scraper = project.in(file("scraper"))
       "ch.qos.logback" % "logback-classic" % "1.2.3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
     )
+  ).
+  settings(
+    mainClass in assembly := Some("Main"),
   )
 
 lazy val analyzer = project.in(file("analyzer"))
