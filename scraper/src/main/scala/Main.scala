@@ -30,12 +30,14 @@ object Main extends App {
   root.info("Waiting for stops")
   Thread.sleep(30000)
 
+  val stopRequestDelay = 2
+
   Database.stopRepository().findAll()
     .andThen { case Success(stops) =>
       root.info("There are " + stops.size + "stops")
       stops.foreach(stop => {
-        scheduler ! RecurringTask(s"stop${stop.shortName}", new StopRequest(stop.shortName), 1 minutes)
-        Thread.sleep(500)
+        scheduler ! RecurringTask(s"stop${stop.shortName}", new StopRequest(stop.shortName), stopRequestDelay minutes)
+        Thread.sleep(1000 * 60 * stopRequestDelay / stops.size)
       })
     }
 }
