@@ -30,7 +30,7 @@ object Main extends App {
   root.info("Waiting for stops")
   Thread.sleep(30000)
 
-  val stopRequestDelay = 2
+  val stopRequestDelay = 1
 
   Database.stopRepository().findAll()
     .andThen { case Success(stops) =>
