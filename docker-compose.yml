@@ -6,9 +6,16 @@ services:
       - 27017:27017
     volumes:
       - ./data/:/data/db
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
 
   scraper:
     build: .
     restart: always
     volumes:
       - ./scraper/target/scala-2.12/NeverRideOnTimeScraper-assembly-0.1.jar:/code/app.jar
+    logging:
+      options:
+        max-size: "100m"
