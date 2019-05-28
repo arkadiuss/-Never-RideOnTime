@@ -19,7 +19,8 @@ object Main extends App {
   val scheduler = system.actorOf(Scheduler.props, "scheduler")
   implicit val executor = system.dispatcher
 
-  val goodStops = Source.fromFile("scraper/src/main/resources/goodStops.txt").mkString.split(",")
+  println((new File("")).getAbsolutePath)
+  val goodStops = Source.fromFile("/code/goodStops.txt").mkString.split(",")
   Database.stopRepository().findAll()
     .andThen { case Success(stops) =>
       if (stops.isEmpty) {

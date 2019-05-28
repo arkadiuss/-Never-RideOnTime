@@ -16,6 +16,7 @@ services:
     restart: always
     volumes:
       - ./scraper/target/scala-2.12/NeverRideOnTimeScraper-assembly-0.1.jar:/code/app.jar
+      - ./scraper/goodStops.txt:/code/goodStops.txt
     logging:
       options:
         max-size: "100m"
