@@ -27,7 +27,12 @@ lazy val scraper = project.in(file("scraper"))
 lazy val analyzer = project.in(file("analyzer"))
   .settings(
     common,
-    name := "NeverRideOnTimeAnalyzer"
+    name := "NeverRideOnTimeAnalyzer",
+    libraryDependencies ++= Seq(
+      "org.apache.spark" %% "spark-core" % "2.4.3",
+      "org.apache.spark" %% "spark-sql" % "2.4.3",
+      "org.mongodb.spark" %% "mongo-spark-connector" % "2.4.0"
+    )
   )
 
 lazy val root = (project in file("."))
