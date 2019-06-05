@@ -1,3 +1,13 @@
+---
+title: (Never) Ride On Time
+author:
+  - Arkadiusz Kraus
+  - Grzegorz Wcisło
+lang: en
+section-titles: false
+theme: "AnnArbor"
+colortheme: "dolphin"
+---
 # Scraper
 
 ## Goal
