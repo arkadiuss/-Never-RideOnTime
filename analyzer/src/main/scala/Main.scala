@@ -1,12 +1,14 @@
-import com.mongodb.spark.MongoSpark
 import org.apache.spark.sql.SparkSession
 
 object Main extends App {
   val spark = initSpark()
 
   val dataService = new DataService(spark)
+  dataService.normalize_departed_passages()
+    .coalesce(1)
+    .write.csv("normalized_delays.csv")
+    //.show(20, false)
 
-  dataService.passages()
 
   def initSpark() = {
     SparkSession.builder()
