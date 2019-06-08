@@ -1,9 +1,16 @@
-object PassagesFields {
-  val shortStopName = "stopShortName"
-  val passageId = "passageid"
-  val actualRelativeTime = "actualRelativeTime"
-  val actualTime = "actualTime"
-  val scrapedTimestamp = "scrapedTimestamp"
-  val plannedTime = "plannedTime"
-  val line = "patternText"
+package object PassagesFields{
+  val STOP_SHORT_NAME = "stopShortName"
+  val PASSAGE_ID = "passageid"
+  val ACTUAL_RELATIVE_TIME = "actualRelativeTime"
+  val ACTUAL_TIME = "actualTime"
+  val SCRAPED_TIMESTAMP = "scrapedTimestamp"
+  val PLANNED_TIME = "plannedTime"
+  val LINE_NO = "patternText"
+  val DELAY = "delay"
+  val SEC_DELAY = "secDelay"
+  val PASSAGES_COUNT = "passagesCount"
+  val AVERAGE_DELAY = "averageDelay"
 }
+
+
+
