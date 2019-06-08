@@ -1,7 +1,8 @@
 import com.mongodb.spark.MongoSpark
 import functions.CountDiff
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{col, collect_list, first, udf, mean, floor}
+import org.apache.spark.sql.functions.{col, collect_list, first, desc,
+  udf, mean, floor, round, count, substring_index, avg}
 import PassagesFields._
 
 
@@ -16,8 +17,7 @@ class DataService(private val spark: SparkSession) {
       .mkString(",")
   }
 
-
-  def normalize_departed_passages(limit: Int = 1000): DataFrame = {
+  def normalizeDepartedPassages(): DataFrame = {
     val diffUdf = udf(CountDiff)
     dataframe
       .filter(col(ACTUAL_RELATIVE_TIME) < 0)
@@ -32,10 +32,35 @@ class DataService(private val spark: SparkSession) {
             col(ACTUAL_RELATIVE_TIME),
             col(SCRAPED_TIMESTAMP)))) as SEC_DELAY
       )
-      .withColumn(DELAY, floor(col(SEC_DELAY)/60))
+      .withColumn(DELAY, round(col(SEC_DELAY)/60))
+  }
 
+  def passagesCountByDelay(): DataFrame = {
+    normalizeDepartedPassages()
+      .groupBy(DELAY)
+      .agg(count(PASSAGE_ID) as PASSAGES_COUNT)
+      .sort(DELAY)
+  }
+
+  def passagesByHour(): DataFrame = {
+    normalizeDepartedPassages()
+      .groupBy(substring_index(col(PLANNED_TIME), ":", 1) as PLANNED_TIME)
+      .agg(count(PASSAGE_ID) as PASSAGES_COUNT)
+      .sort(PLANNED_TIME)
+  }
+
+  def averageDelayByHour(): DataFrame = {
+    normalizeDepartedPassages()
+      .groupBy(substring_index(col(PLANNED_TIME), ":", 1) as PLANNED_TIME)
+      .agg(avg(DELAY) as AVERAGE_DELAY)
+      .sort(PLANNED_TIME)
   }
 
 
-
+  def averageDelayByBus(): DataFrame = {
+    normalizeDepartedPassages()
+      .groupBy(LINE_NO)
+      .agg(avg(DELAY) as AVERAGE_DELAY)
+      .sort(desc(AVERAGE_DELAY))
+  }
 }

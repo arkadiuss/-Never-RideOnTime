@@ -7,7 +7,9 @@ package object PassagesFields{
   val PLANNED_TIME = "plannedTime"
   val LINE_NO = "patternText"
   val DELAY = "delay"
-  val SEC_DELAY = "sec_delay"
+  val SEC_DELAY = "secDelay"
+  val PASSAGES_COUNT = "passagesCount"
+  val AVERAGE_DELAY = "averageDelay"
 }
 
 

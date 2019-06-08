@@ -1,20 +1,53 @@
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object Main extends App {
+  val usage =
+    """
+      analyzer [command]
+      commands: normalized countByDelay passagesByHour avgDelayByHour avgDelayByBus
+    """
+  val DATA_DIR = "data/"
+
+  if(args.length < 1) {
+    println(usage)
+    sys.exit()
+  }
+
   val spark = initSpark()
-
   val dataService = new DataService(spark)
-  dataService.normalize_departed_passages()
-    .coalesce(1)
-    .write.csv("normalized_delays.csv")
-    //.show(20, false)
 
+  executeCommands(args)
 
-  def initSpark() = {
+  private def initSpark() = {
     SparkSession.builder()
       .master("local")
       .appName("NeverRideOnTimeAnalyzer")
       .config("spark.mongodb.input.uri", "mongodb://127.0.0.1:27017/mpk.passages")
       .getOrCreate()
   }
+
+  private def executeCommands(commands: Array[String]): Unit = {
+    for(c <- commands) {
+      val (dataframe, filename) = c match {
+        case "normalized" => (dataService.normalizeDepartedPassages(), "normalized_passages")
+        case "countByDelay" => (dataService.passagesCountByDelay(), "passages_count_by_delay")
+        case "passagesByHour" =>  (dataService.passagesByHour(), "passages_by_hour")
+        case "avgDelayByHour" =>  (dataService.averageDelayByHour(), "avg_delay_by_hour")
+        case "avgDelayByBus" => (dataService.averageDelayByBus(), "avg_delay_by_bus")
+        case _ => println("Unknown command"); sys.exit(1)
+      }
+      asCsv(dataframe, filename)
+
+    }
+  }
+
+  private def asCsv(dataframe: DataFrame, filename: String): Unit = {
+    dataframe
+      .coalesce(1)
+      .write
+      .option("header", "true")
+      .csv(s"$DATA_DIR$filename")
+  }
+
+
 }
