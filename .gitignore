@@ -5,3 +5,5 @@ target
 *.iws
 .idea
 out
+_SUCCESS
+*.crc
