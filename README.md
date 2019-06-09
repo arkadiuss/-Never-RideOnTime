@@ -248,7 +248,8 @@ Looking optimistically that 1 or 2 minutes is not a delay, we can say that
 
 
 ### Hall of fame
-And who is the winner? We couldn't skip the best latecomers.
+And who is the winner? We couldn't skip the best latecomers.  
+<pre>
 +-----------+------------------+  
 |patternText|      averageDelay|  
 +-----------+------------------+  
@@ -273,11 +274,12 @@ And who is the winner? We couldn't skip the best latecomers.
 |        169| 5.536618158810503|  
 |        179| 5.529395634528902|  
 +-----------+------------------+  
+</pre>
 
 We can see that replacement buses (704, 713) lead in ranking. They are a substitution for trams on Królewska street, departs every about 6-10 minutes and ride through the most crowded roads. You don't have to wait for them for so long time, because previous one comes when the next should, but real results look likely.
 
 ### Delay by stops
-API enable us to download also coordinates of the stops. 
+API enables us to download also coordinates of the stops and to mark them on the map. The bigger point means more passages from stop and color indicate average delay.
 ![Delays by stops](results/delays_by_stops.png)
 
 ## Data
