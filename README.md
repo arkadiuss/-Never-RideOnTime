@@ -17,6 +17,83 @@ Cracow. There are around 1400 bus stops in Cracow and we have to query
 each one separately for information about the whereabouts of nearby
 buses.
 
+## The API
+
+### Servers
+
+MPK has two servers, one for buses and one for trams. We decided to go only for buses.
+
+#### Bus API
+
+[http://91.223.13.70/internetservice](http://91.223.13.70/internetservice)
+
+#### Tram API
+
+[http://ttss.krakow.pl/internetservice](http://ttss.krakow.pl/internetservice)
+
+### Endpoints - Vehicles
+
+#### URL
+
+[geoserviceDispatcher/services/vehicleinfo/vehicles](geoserviceDispatcher/services/vehicleinfo/vehicles)
+
+#### Sample response
+
+```json
+{ "lastUpdate": 1560066842348,
+  "vehicles": [{
+    "color": "0x000000",
+    "heading": 90,
+    "latitude": 180069486,
+    "name": "133 Bieżanów Potrzask",
+    "tripId": "8095261304192117256",
+    "id": "-1152921495675693247",
+    "category": "bus",
+    "longitude": 71798625
+}] }
+```
+
+### Endpoints - Stop Info
+
+#### URL
+
+[geoserviceDispatcher/services/stopinfo/stops](geoserviceDispatcher/services/stopinfo/stops)
+
+#### Sample response
+
+```json
+{ "stops": [{
+    "category": "bus",
+    "id": "8095258838875244269",
+    "latitude": 180353736,
+    "longitude": 72333180,
+    "name": "Grzegorza z Sanoka (nż)",
+    "shortName": "3186"
+}] }
+```
+
+### Endpoints - Stops
+
+#### URL
+
+[services/passageInfo/stopPassages/stop?stop=ID](services/passageInfo/stopPassages/stop?stop=ID)
+
+#### Sample response
+
+```json
+{ "actual": [{
+    "actualRelativeTime": 1263,
+    "direction": "Ruszcza",
+    "mixedTime": "10:26",
+    "passageid": "-1152921504324670730",
+    "patternText": "160",
+    "plannedTime": "10:26",
+    "routeId": "8095257447305838788",
+    "status": "PLANNED",
+    "tripId": "8095261304193399306"
+}] ... }
+```
+
 ## Libraries
 
 ### Akka
@@ -88,7 +165,7 @@ ones to about 400.
 
 ### Not enough RAM
 
-The VM has only 512MB of RAM and the JVM would really like to use
+The VM has only 1GB of RAM and the JVM would really like to use
 all of it. Adding 512MB of swap space seems to work wonders.
 
 ### Random scraper stops
@@ -98,3 +175,13 @@ without any error messages. We suspect the lack of RAM might have
 something to do with this.  To combat this problem we have a
 cronjob that checks whether the scrapper is running and restarts
 the container if need be.
+
+## Result
+
+We have created a scraper that has many failover mechanisms, can
+handle VM restarts, API downtime and random crashes from unidentified
+reasons. Since we added all of the above features, it has been
+running flawlessly.
+
+It scrapes data at the maximum rate possible, using as many concurrent
+connections as possible.
