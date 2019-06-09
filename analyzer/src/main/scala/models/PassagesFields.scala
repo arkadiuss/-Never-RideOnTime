@@ -1,3 +1,5 @@
+package models
+
 package object PassagesFields{
   val STOP_SHORT_NAME = "stopShortName"
   val PASSAGE_ID = "passageid"
@@ -11,6 +13,3 @@ package object PassagesFields{
   val PASSAGES_COUNT = "passagesCount"
   val AVERAGE_DELAY = "averageDelay"
 }
-
-
-

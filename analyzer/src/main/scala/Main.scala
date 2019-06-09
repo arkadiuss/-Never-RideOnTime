@@ -4,7 +4,7 @@ object Main extends App {
   val usage =
     """
       analyzer [command]
-      commands: normalized countByDelay passagesByHour avgDelayByHour avgDelayByBus
+      commands: normalized countByDelay passagesByHour avgDelayByHour avgDelayByBus avgDelayByStop
     """
   val DATA_DIR = "data/"
 
@@ -22,7 +22,6 @@ object Main extends App {
     SparkSession.builder()
       .master("local")
       .appName("NeverRideOnTimeAnalyzer")
-      .config("spark.mongodb.input.uri", "mongodb://127.0.0.1:27017/mpk.passages")
       .getOrCreate()
   }
 
@@ -34,6 +33,7 @@ object Main extends App {
         case "passagesByHour" =>  (dataService.passagesByHour(), "passages_by_hour")
         case "avgDelayByHour" =>  (dataService.averageDelayByHour(), "avg_delay_by_hour")
         case "avgDelayByBus" => (dataService.averageDelayByBus(), "avg_delay_by_bus")
+        case "avgDelayByStop" => (dataService.averageDelayByStop(), "avg_delay_by_stop")
         case _ => println("Unknown command"); sys.exit(1)
       }
       asCsv(dataframe, filename)

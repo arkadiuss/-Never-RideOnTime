@@ -1,16 +1,18 @@
 import com.mongodb.spark.MongoSpark
 import functions.CountDiff
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{col, collect_list, first, desc,
-  udf, mean, floor, round, count, substring_index, avg}
-import PassagesFields._
+import org.apache.spark.sql.functions.{avg, col, collect_list, count, desc, first, floor, mean, round, substring_index, udf}
+import models.PassagesFields._
+import com.mongodb.spark.config.ReadConfig
+import models.StopsFields._
 
 
 class DataService(private val spark: SparkSession) {
-  private val dataframe: DataFrame = MongoSpark.load(spark)
+  private val dataframePassages: DataFrame = MongoSpark.load(spark, ReadConfig(Map("uri" -> "mongodb://127.0.0.1:27017/mpk.passages")))
+  private val dataframeStops: DataFrame = MongoSpark.load(spark, ReadConfig(Map("uri" -> "mongodb://127.0.0.1:27017/mpk.stops")))
 
   def goodStops(): String = {
-    dataframe.select(STOP_SHORT_NAME)
+    dataframePassages.select(STOP_SHORT_NAME)
       .distinct()
       .collect()
       .map(f => f.get(0))
@@ -19,7 +21,7 @@ class DataService(private val spark: SparkSession) {
 
   def normalizeDepartedPassages(): DataFrame = {
     val diffUdf = udf(CountDiff)
-    dataframe
+    dataframePassages
       .filter(col(ACTUAL_RELATIVE_TIME) < 0)
       .groupBy(PASSAGE_ID)
       .agg(
@@ -62,5 +64,15 @@ class DataService(private val spark: SparkSession) {
       .groupBy(LINE_NO)
       .agg(avg(DELAY) as AVERAGE_DELAY)
       .sort(desc(AVERAGE_DELAY))
+  }
+
+  def averageDelayByStop(): DataFrame = {
+    normalizeDepartedPassages()
+      .groupBy(STOP_SHORT_NAME)
+      .agg(avg(DELAY) as AVERAGE_DELAY)
+      .sort(desc(AVERAGE_DELAY))
+      .join(dataframeStops, col(STOP_SHORT_NAME) === col(SHORT_NAME))
+      .select(col(SHORT_NAME), col(NAME), col(AVERAGE_DELAY), col(LATITUDE)/3600000 as LATITUDE, col(LONGITUDE)/3600000 as LONGITUDE)
+
   }
 }
