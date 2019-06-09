@@ -1,7 +1,7 @@
 import com.mongodb.spark.MongoSpark
 import functions.CountDiff
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{avg, col, collect_list, count, desc, first, floor, mean, round, substring_index, udf}
+import org.apache.spark.sql.functions.{avg, col, count, desc, first, floor, mean, round, substring_index, udf}
 import models.PassagesFields._
 import com.mongodb.spark.config.ReadConfig
 import models.StopsFields._
@@ -69,10 +69,10 @@ class DataService(private val spark: SparkSession) {
   def averageDelayByStop(): DataFrame = {
     normalizeDepartedPassages()
       .groupBy(STOP_SHORT_NAME)
-      .agg(avg(DELAY) as AVERAGE_DELAY)
+      .agg(avg(DELAY) as AVERAGE_DELAY, count(PASSAGE_ID) as PASSAGES_COUNT)
       .sort(desc(AVERAGE_DELAY))
       .join(dataframeStops, col(STOP_SHORT_NAME) === col(SHORT_NAME))
-      .select(col(SHORT_NAME), col(NAME), col(AVERAGE_DELAY), col(LATITUDE)/3600000 as LATITUDE, col(LONGITUDE)/3600000 as LONGITUDE)
-
+      .select(col(SHORT_NAME), col(NAME), col(AVERAGE_DELAY), col(PASSAGES_COUNT),
+        col(LATITUDE)/3600000 as LATITUDE, col(LONGITUDE)/3600000 as LONGITUDE)
   }
 }

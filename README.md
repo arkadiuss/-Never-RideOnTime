@@ -186,7 +186,6 @@ running flawlessly.
 It scrapes data at the maximum rate possible, using as many concurrent
 connections as possible.
 
-
 # Data analysis
 Finally after we collected the data there is a time a analyze it. 
 
@@ -197,7 +196,6 @@ Big engine for not so huge data. But we it for educational purposes and to enabl
 
 ### Plot.ly
 We prefer to analyze data as charts than in csv files. We used this nice tool to generate plots. 
-We wanted to use vegas but it didn;t wan;t to work with Scala 2.12.
 
 ## Data
 
@@ -206,17 +204,17 @@ API enabled us to download data about passages not about delays. Data from API i
 
 ```scala
 case class Passage(
-                    actualRelativeTime: Long, // time in second to or after passage
-                    actualTime: Option[String], // real time of passage - predicted in API
-                    plannedTime: String, // planned time that bus should be on a stop
-                    status: String, // one of: PREDICTED, STOPPING, DEPARTED
-                    patternText: String, // line number
-                    routeId: String, 
-                    tripId: String,
-                    passageid: String, // each passage of a bus from one stop has unique id - easy to group by
-                    stopShortName: String, // stop id
-                    scrapedTimestamp: Long 
-                    )
+  actualRelativeTime: Long, // time in second to or after passage
+  actualTime: Option[String], // real time of passage - predicted in API
+  plannedTime: String, // planned time that bus should be on a stop
+  status: String, // one of: PREDICTED, STOPPING, DEPARTED
+  patternText: String, // line number
+  routeId: String, 
+  tripId: String,
+  passageid: String, // each passage of a bus from one stop has unique id - easy to group by
+  stopShortName: String, // stop id
+  scrapedTimestamp: Long 
+)
 
 ```
 
@@ -225,7 +223,7 @@ But we want to have information about delays, not about time to passage. In the 
 Structure after normalization consists fields: passageid, patternText, plannedTime, stopShortName, secDelay, delay
 
 ### First stats
-We have been collecting data from ... to .... We manage to create about n (7,5 mln currently) records. After normalization we have m (1 mln I think) records about buses' delays.
+We have been collecting data from 21.05 to 09.06.2019. We manage to create about 8 000 000 records (2,1 GB). After normalization we have 772057 records about buses' delays.
 
 ### Problems
 
@@ -242,28 +240,56 @@ There are some points that lies with very big delay or that comes very early. We
 
 ### Average delay by hour
 We could predict hottest hours. No surprise here.
-![Delays by hours](results/delays_by_hour.png)
+![Delays by hours](results/avg_delay_by_hour.png)
 
 ### Passages count by delay
+Looking optimistically that 1 or 2 minutes is not a delay, we can say that 
+![Delays by hours](results/delays_by_value.png)
 
 
 ### Hall of fame
 And who is the winner? We couldn't skip the best latecomers.
++-----------+------------------+  
+|patternText|      averageDelay|  
++-----------+------------------+  
+|        704|14.253090533829251|  
+|        605|13.425742574257425|  
+|        713|10.593760975765509|  
+|        910| 9.961290322580645|  
+|        278|            9.4375|  
+|        503|7.4461660313845845|  
+|        174|   6.8645903859174|  
+|        111| 6.714285714285714|  
+|        163| 6.611250748055057|  
+|        173| 6.421270005162623|  
+|        238|  6.30126582278481|  
+|        161| 6.273356401384083|  
+|        125| 6.226497878155794|  
+|        204| 6.169820717131474|  
+|        184| 6.073930980289438|  
+|        132| 6.059286839467278|  
+|        469| 6.045971204849709|  
+|        304| 5.936869947100509|  
+|        169| 5.536618158810503|  
+|        179| 5.529395634528902|  
++-----------+------------------+  
+
+We can see that replacement buses (704, 713) lead in ranking. They are a substitution for trams on Królewska street, departs every about 6-10 minutes and ride through the most crowded roads. You don't have to wait for them for so long time, because previous one comes when the next should, but real results look likely.
 
 ### Delay by stops
 API enable us to download also coordinates of the stops. 
+![Delays by stops](results/delays_by_stops.png)
 
 ## Data
 TODO: Do we share the data to download?
 
 # Run
-If you want to run app by yourself just type:
-
+If you want to run scaper by yourself just type:
 ```bash
     sudo docker-compose up
 ```
 It runs database instance and also scraper daemon as containers. You can run app modules through:
 ```sbtshell
-    sbt "project analyzer" run
     sbt "project scraper" run
+    sbt "project analyzer" run
 ``` 
