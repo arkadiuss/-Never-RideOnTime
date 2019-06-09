@@ -129,10 +129,6 @@ Parses responses and passes them to database writers.
 
 Sends data to MongoDB.
 
-### Logger
-
-Logs stuff.
-
 ## Deployment
 
 ### Azure
