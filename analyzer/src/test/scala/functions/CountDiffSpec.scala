@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CountDiffSpec extends FlatSpec with Matchers {
 
-  it should "return time difference on the same hour" in {
+  "CountDiff" should "return time difference on the same hour" in {
     val res = CountDiff("15:22", "-67",
       DateTime.now().withTime(15, 25, 12, 0).getMillis)
     res should be (125)
