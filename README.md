@@ -183,7 +183,7 @@ It scrapes data at the maximum rate possible, using as many concurrent
 connections as possible.
 
 # Data analysis
-Finally after we collected the data there is a time a analyze it. 
+Finally after we collected the data there is a time a analyze it.
 
 ## Tools
 
@@ -191,7 +191,7 @@ Finally after we collected the data there is a time a analyze it.
 Big engine for not so huge data. But we it for educational purposes and to enable painless extension to analyze bigger data.
 
 ### Plot.ly
-We prefer to analyze data as charts than in csv files. We used this nice tool to generate plots. 
+We prefer to analyze data as charts than in csv files. We used this nice tool to generate plots.
 
 ## Data
 
@@ -205,11 +205,11 @@ case class Passage(
   plannedTime: String, // planned time that bus should be on a stop
   status: String, // one of: PREDICTED, STOPPING, DEPARTED
   patternText: String, // line number
-  routeId: String, 
+  routeId: String,
   tripId: String,
   passageid: String, // each passage of a bus from one stop has unique id - easy to group by
   stopShortName: String, // stop id
-  scrapedTimestamp: Long 
+  scrapedTimestamp: Long
 )
 
 ```
@@ -239,30 +239,28 @@ We could predict hottest hours. No surprise here.
 ![Delays by hours](results/avg_delay_by_hour.png)
 
 ### Passages count by delay
-Looking optimistically that 1 or 2 minutes is not a delay, we can say that 
+Looking optimistically that 1 or 2 minutes is not a delay, we can say that
 ![Delays by hours](results/delays_by_value.png)
 
 
 ### Hall of fame - I
 
-And who is the winner? We couldn't skip the best latecomers.  
+And who is the winner? We couldn't skip the best latecomers.
 
-+-----------+------------------+
-|patternText|      averageDelay|  
-+-----------+------------------+  
-|        704|             14.25|  
-|        605|             13.42|  
-|        713|             10.59|  
-|        910|              9.96|  
-|        278|              9.43|  
-|        503|              7.44|  
-|        174|              6.86|  
-|        111|              6.71|  
-|        163|              6.61|  
-|        173|              6.42|  
-|        238|              6.30|  
-|        161|              6.27|  
-+-----------+------------------+  
+|patternText|averageDelay|
+|----------:|-----------:|
+|        704|       14.25|
+|        605|       13.42|
+|        713|       10.59|
+|        910|        9.96|
+|        278|        9.43|
+|        503|        7.44|
+|        174|        6.86|
+|        111|        6.71|
+|        163|        6.61|
+|        173|        6.42|
+|        238|        6.30|
+|        161|        6.27|
 
 ### Hall of fame - II
 
@@ -284,4 +282,4 @@ It runs database instance and also scraper daemon as containers. You can run app
 ```sbtshell
     sbt "project scraper" run
     sbt "project analyzer" run
-``` 
+```
