@@ -247,34 +247,28 @@ Looking optimistically that 1 or 2 minutes is not a delay, we can say that
 ![Delays by hours](results/delays_by_value.png)
 
 
-### Hall of fame
+### Hall of fame - I
+
 And who is the winner? We couldn't skip the best latecomers.  
-<pre>
-+-----------+------------------+  
+
++-----------+------------------+
 |patternText|      averageDelay|  
 +-----------+------------------+  
-|        704|14.253090533829251|  
-|        605|13.425742574257425|  
-|        713|10.593760975765509|  
-|        910| 9.961290322580645|  
-|        278|            9.4375|  
-|        503|7.4461660313845845|  
-|        174|   6.8645903859174|  
-|        111| 6.714285714285714|  
-|        163| 6.611250748055057|  
-|        173| 6.421270005162623|  
-|        238|  6.30126582278481|  
-|        161| 6.273356401384083|  
-|        125| 6.226497878155794|  
-|        204| 6.169820717131474|  
-|        184| 6.073930980289438|  
-|        132| 6.059286839467278|  
-|        469| 6.045971204849709|  
-|        304| 5.936869947100509|  
-|        169| 5.536618158810503|  
-|        179| 5.529395634528902|  
+|        704|             14.25|  
+|        605|             13.42|  
+|        713|             10.59|  
+|        910|              9.96|  
+|        278|              9.43|  
+|        503|              7.44|  
+|        174|              6.86|  
+|        111|              6.71|  
+|        163|              6.61|  
+|        173|              6.42|  
+|        238|              6.30|  
+|        161|              6.27|  
 +-----------+------------------+  
-</pre>
+
+### Hall of fame - II
 
 We can see that replacement buses (704, 713) lead in ranking. They are a substitution for trams on Królewska street, departs every about 6-10 minutes and ride through the most crowded roads. You don't have to wait for them for so long time, because previous one comes when the next should, but real results look likely.
 
