@@ -181,3 +181,107 @@ running flawlessly.
 
 It scrapes data at the maximum rate possible, using as many concurrent
 connections as possible.
+
+# Data analysis
+Finally after we collected the data there is a time a analyze it. 
+
+## Tools
+
+### Apache Spark
+Big engine for not so huge data. But we it for educational purposes and to enable painless extension to analyze bigger data.
+
+### Plot.ly
+We prefer to analyze data as charts than in csv files. We used this nice tool to generate plots. 
+
+## Data
+
+### Structure
+API enabled us to download data about passages not about delays. Data from API includes time to/after passage and planned time. We have downloaded this data and saved records about passages from 5 minutes before to 5 minutes after passage. Record structure:
+
+```scala
+case class Passage(
+  actualRelativeTime: Long, // time in second to or after passage
+  actualTime: Option[String], // real time of passage - predicted in API
+  plannedTime: String, // planned time that bus should be on a stop
+  status: String, // one of: PREDICTED, STOPPING, DEPARTED
+  patternText: String, // line number
+  routeId: String, 
+  tripId: String,
+  passageid: String, // each passage of a bus from one stop has unique id - easy to group by
+  stopShortName: String, // stop id
+  scrapedTimestamp: Long 
+)
+
+```
+
+### Normalization
+But we want to have information about delays, not about time to passage. In the simplest version count only records with DEPARTED status, add actualRelativeTime to timestamp and compute difference between it and plannedTime.
+Structure after normalization consists fields: passageid, patternText, plannedTime, stopShortName, secDelay, delay
+
+### First stats
+We have been collecting data from 21.05 to 09.06.2019. We manage to create about 8 000 000 records (2,1 GB). After normalization we have 772057 records about buses' delays.
+
+### Problems
+
+#### Roadworks
+During scraping data there was a lot of roadworks in Cracov. Some main roads like Królewska, Aleje and Dietla was rebuilding then.
+
+#### Delay determining
+We used simplest algorithm to determine delay. It skips situations when one bus comes about for example 20 minutes later, but previous one has come like next one should. Then maybe it is better to say that previous hasn't come and compute smaller delay for the next.
+
+#### Outliers
+There are some points that lies with very big delay or that comes very early. We could assume that bus won't come earlier than 3 minutes before schedule and won't have more than one hour delay.
+
+## Results
+
+### Average delay by hour
+We could predict hottest hours. No surprise here.
+![Delays by hours](results/avg_delay_by_hour.png)
+
+### Passages count by delay
+Looking optimistically that 1 or 2 minutes is not a delay, we can say that 
+![Delays by hours](results/delays_by_value.png)
+
+
+### Hall of fame - I
+
+And who is the winner? We couldn't skip the best latecomers.  
+
++-----------+------------------+
+|patternText|      averageDelay|  
++-----------+------------------+  
+|        704|             14.25|  
+|        605|             13.42|  
+|        713|             10.59|  
+|        910|              9.96|  
+|        278|              9.43|  
+|        503|              7.44|  
+|        174|              6.86|  
+|        111|              6.71|  
+|        163|              6.61|  
+|        173|              6.42|  
+|        238|              6.30|  
+|        161|              6.27|  
++-----------+------------------+  
+
+### Hall of fame - II
+
+We can see that replacement buses (704, 713) lead in ranking. They are a substitution for trams on Królewska street, departs every about 6-10 minutes and ride through the most crowded roads. You don't have to wait for them for so long time, because previous one comes when the next should, but real results look likely.
+
+### Delay by stops
+API enables us to download also coordinates of the stops and to mark them on the map. The bigger point means more passages from stop and color indicate average delay.
+![Delays by stops](results/delays_by_stops.png)
+
+## Data
+TODO: Do we share the data to download?
+
+# Run
+If you want to run scaper by yourself just type:
+```bash
+    sudo docker-compose up
+```
+It runs database instance and also scraper daemon as containers. You can run app modules through:
+```sbtshell
+    sbt "project scraper" run
+    sbt "project analyzer" run
+``` 
