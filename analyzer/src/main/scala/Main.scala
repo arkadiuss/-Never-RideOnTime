@@ -16,8 +16,7 @@ object Main extends App {
   val spark = initSpark()
   val dataService = new DataService(spark)
 
-  dataService.averageDelayByBus().show(20)
-  //executeCommands(args)
+  executeCommands(args)
 
   private def initSpark() = {
     SparkSession.builder()
